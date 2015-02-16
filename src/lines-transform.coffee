@@ -3,7 +3,7 @@ Region = require './region'
 
 module.exports =
 class LinesTransform
-  setSource: (@source) ->
+  initialize: (@source) ->
 
   getNextRegion: ({sourceStartPosition}) ->
     if newlinePosition = @source.positionOf('\n', sourceStartPosition)

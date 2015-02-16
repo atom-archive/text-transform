@@ -2,8 +2,8 @@ Point = require './point'
 
 module.exports =
 class TransformLayer
-  constructor: (@transform, @source) ->
-    @transform.setSource(@source)
+  constructor: (@source, @transform) ->
+    @transform.initialize(@source)
 
   getRegions: ->
     regions = []

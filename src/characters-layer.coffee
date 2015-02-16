@@ -2,7 +2,7 @@ Point = require './point'
 Region = require './region'
 
 module.exports =
-class BaseLayer
+class CharactersLayer
   constructor: (@content) ->
 
   positionOf: (string, start=Point(0, 0)) ->
