@@ -6,7 +6,7 @@ Point = require '../src/point'
 describe "LinesTransform", ->
   ffit "transforms the linear characters layer into a layer with regions for each line", ->
     buffer = new TextBuffer(text: "abc\ndefg\nhi")
-    {linesLayer} = buffer
+    {charactersLayer, linesLayer} = buffer
 
     regions = linesLayer.getRegions()
     expect(regions.length).toBe 3
@@ -14,15 +14,15 @@ describe "LinesTransform", ->
     expect(regions[1].toString()).toBe '<(0, 5):(1, 0) - "defg\\n">'
     expect(regions[2].toString()).toBe '<(0, 2):(0, 2) - "hi">'
 
-    expect(linesLayer.sourceToTarget(Point(0, 0))).toEqual Point(0, 0)
-    expect(linesLayer.sourceToTarget(Point(0, 1))).toEqual Point(0, 1)
-    expect(linesLayer.sourceToTarget(Point(0, 2))).toEqual Point(0, 2)
-    expect(linesLayer.sourceToTarget(Point(0, 3))).toEqual Point(0, 3)
-    expect(linesLayer.sourceToTarget(Point(0, 4))).toEqual Point(1, 0)
-    expect(linesLayer.sourceToTarget(Point(0, 5))).toEqual Point(1, 1)
-    expect(linesLayer.sourceToTarget(Point(0, 6))).toEqual Point(1, 2)
-    expect(linesLayer.sourceToTarget(Point(0, 7))).toEqual Point(1, 3)
-    expect(linesLayer.sourceToTarget(Point(0, 8))).toEqual Point(1, 4)
-    expect(linesLayer.sourceToTarget(Point(0, 9))).toEqual Point(2, 0)
-    expect(linesLayer.sourceToTarget(Point(0, 10))).toEqual Point(2, 1)
-    expect(linesLayer.sourceToTarget(Point(0, 11))).toEqual Point(2, 2)
+    expect(linesLayer.fromLayerPosition(charactersLayer, Point(0, 0))).toEqual Point(0, 0)
+    expect(linesLayer.fromLayerPosition(charactersLayer, Point(0, 1))).toEqual Point(0, 1)
+    expect(linesLayer.fromLayerPosition(charactersLayer, Point(0, 2))).toEqual Point(0, 2)
+    expect(linesLayer.fromLayerPosition(charactersLayer, Point(0, 3))).toEqual Point(0, 3)
+    expect(linesLayer.fromLayerPosition(charactersLayer, Point(0, 4))).toEqual Point(1, 0)
+    expect(linesLayer.fromLayerPosition(charactersLayer, Point(0, 5))).toEqual Point(1, 1)
+    expect(linesLayer.fromLayerPosition(charactersLayer, Point(0, 6))).toEqual Point(1, 2)
+    expect(linesLayer.fromLayerPosition(charactersLayer, Point(0, 7))).toEqual Point(1, 3)
+    expect(linesLayer.fromLayerPosition(charactersLayer, Point(0, 8))).toEqual Point(1, 4)
+    expect(linesLayer.fromLayerPosition(charactersLayer, Point(0, 9))).toEqual Point(2, 0)
+    expect(linesLayer.fromLayerPosition(charactersLayer, Point(0, 10))).toEqual Point(2, 1)
+    expect(linesLayer.fromLayerPosition(charactersLayer, Point(0, 11))).toEqual Point(2, 2)

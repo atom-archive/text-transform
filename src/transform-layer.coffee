@@ -19,17 +19,20 @@ class TransformLayer
 
     regions
 
-  sourceToTarget: (sourcePoint) ->
-    sourcePoint = @source.sourceToTarget(sourcePoint)
+  fromLayerPosition: (layer, layerPosition) ->
+    if @source isnt layer
+      sourcePosition = @source.fromLayerPosition(layerPosition)
+    else
+      sourcePosition = layerPosition
 
     sourceTraversal = Point(0, 0)
     targetTraversal = Point(0, 0)
 
     for region in @getRegions()
       nextSourceTraversal = sourceTraversal.traverse(region.sourceTraversal)
-      break if nextSourceTraversal.isGreaterThan(sourcePoint)
+      break if nextSourceTraversal.isGreaterThan(sourcePosition)
       sourceTraversal = nextSourceTraversal
       targetTraversal = targetTraversal.traverse(region.targetTraversal)
 
-    overshoot = Point(sourcePoint.rows - sourceTraversal.rows, sourcePoint.columns - sourceTraversal.columns)
+    overshoot = Point(sourcePosition.rows - sourceTraversal.rows, sourcePosition.columns - sourceTraversal.columns)
     targetTraversal.traverse(overshoot)
