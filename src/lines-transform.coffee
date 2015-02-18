@@ -7,7 +7,12 @@ class LinesTransform
 
   getNextRegion: ({sourceStartPosition}) ->
     if newlinePosition = @source.positionOf('\n', sourceStartPosition)
-      sourceRegion = @source.slice(sourceStartPosition, newlinePosition.traverse(Point(0, 1)))
-      new Region(sourceRegion.sourceTraversal, Point(1, 0), sourceRegion.content)
+      sourceEndPosition = newlinePosition.traverse(Point(0, 1))
+      sourceTraversal = sourceStartPosition.traversal(sourceEndPosition)
+      targetTraversal = Point(1, 0)
+      content = @source.slice(sourceStartPosition, sourceEndPosition)
+      new Region(sourceTraversal, targetTraversal, content)
     else
-      @source.slice(sourceStartPosition)
+      traversal = sourceStartPosition.traversal(@source.getEndPosition())
+      content = @source.slice(sourceStartPosition)
+      new Region(traversal, traversal, content)

@@ -15,6 +15,18 @@ class Point
     else
       new Point(@rows, @columns + delta.columns)
 
+  traversal: (other) ->
+    if @compare(other) > 0
+      throw new Error("Traversal from #{this} to #{other} invalid. Must traverse forward for now.")
+
+    if other.rows > @rows
+      new Point(other.rows - @rows, other.columns)
+    else
+      new Point(0, other.columns - @columns)
+
+  isEqual: (other) ->
+    @rows is other.rows and @columns is other.columns
+
   isGreaterThan: (other) ->
     @compare(other) > 0
 

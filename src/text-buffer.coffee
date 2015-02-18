@@ -1,12 +1,18 @@
-TransformLayer = require './transform-layer'
+Layer = require './layer'
 CharactersLayer = require './characters-layer'
 LinesTransform = require './lines-transform'
+TabsTransform = require './tabs-transform'
 
 module.exports =
 class TextBuffer
   constructor: ({text}) ->
     @charactersLayer = new CharactersLayer(text)
-    @linesLayer = new TransformLayer(@charactersLayer, new LinesTransform)
 
-  buildTransformLayer: (transform) ->
-    new TransformLayer(@linesLayer, transform)
+  getCharactersLayer: ->
+    @charactersLayer
+
+  getLinesLayer: ->
+    @linesLayer ?= new Layer(@charactersLayer, new LinesTransform)
+
+  buildTabsLayer: (tabLength) ->
+    new Layer(@getLinesLayer(), new TabsTransform(tabLength))

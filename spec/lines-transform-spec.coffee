@@ -6,13 +6,15 @@ Point = require '../src/point'
 describe "LinesTransform", ->
   it "transforms the linear characters layer into a layer with regions for each line", ->
     buffer = new TextBuffer(text: "abc\ndefg\nhi")
-    {charactersLayer, linesLayer} = buffer
+    charactersLayer = buffer.getCharactersLayer()
+    linesLayer = buffer.getLinesLayer()
 
     regions = linesLayer.getRegions()
-    expect(regions.length).toBe 3
-    expect(regions[0].toString()).toBe '<(0, 4):(1, 0) - "abc\\n">'
-    expect(regions[1].toString()).toBe '<(0, 5):(1, 0) - "defg\\n">'
-    expect(regions[2].toString()).toBe '<(0, 2):(0, 2) - "hi">'
+    expect(regions.map (r) -> r.toString()).toEqual [
+      '<(0, 4):(1, 0) - "abc\\n">'
+      '<(0, 5):(1, 0) - "defg\\n">'
+      '<(0, 2):(0, 2) - "hi">'
+    ]
 
     mappings = [
       [[0, 0], [0, 0]]

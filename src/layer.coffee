@@ -1,7 +1,7 @@
 Point = require './point'
 
 module.exports =
-class TransformLayer
+class Layer
   constructor: (@source, @transform) ->
     @transform.initialize(@source)
 
@@ -14,7 +14,7 @@ class TransformLayer
       region = @transform.getNextRegion({sourceStartPosition, targetStartPosition})
       break unless region.sourceTraversal.isGreaterThan(Point.ZERO) or region.targetTraversal.isGreaterThan(Point.ZERO)
       sourceStartPosition = sourceStartPosition.traverse(region.sourceTraversal)
-      targetStartPosition = sourceStartPosition.traverse(region.targetTraversal)
+      targetStartPosition = targetStartPosition.traverse(region.targetTraversal)
       regions.push(region)
 
     regions
@@ -56,3 +56,49 @@ class TransformLayer
       @source.toPositionInLayer(sourcePosition, layer)
     else
       sourcePosition
+
+  positionOf: (string, start=Point(0, 0)) ->
+    targetTraversal = Point.ZERO
+
+    for region in @getRegions()
+      nextTargetTraversal = targetTraversal.traverse(region.targetTraversal)
+      if nextTargetTraversal.isGreaterThan(start)
+        if targetTraversal.isGreaterThan(start)
+          contentStartIndex = 0
+        else
+          contentStartIndex = start.columns - targetTraversal.columns
+
+        contentIndex = region.content.indexOf(string, contentStartIndex)
+        if contentIndex >= 0
+          return targetTraversal.traverse(Point(0, contentIndex))
+
+      targetTraversal = nextTargetTraversal
+
+    undefined
+
+  slice: (start, end=@getEndPosition()) ->
+    content = ""
+    targetTraversal = Point.ZERO
+
+    for region in @getRegions()
+      nextTargetTraversal = targetTraversal.traverse(region.targetTraversal)
+      if nextTargetTraversal.isGreaterThan(start)
+        if targetTraversal.isGreaterThan(start)
+          contentStartIndex = 0
+        else
+          contentStartIndex = start.columns - targetTraversal.columns
+
+        if nextTargetTraversal.isGreaterThan(end)
+          contentEndIndex = end.columns - targetTraversal.columns
+        else
+          contentEndIndex = undefined
+
+        content += region.content.slice(contentStartIndex, contentEndIndex)
+
+    content
+
+  getEndPosition: ->
+    targetTraversal = Point.ZERO
+    for region in @getRegions()
+      targetTraversal = targetTraversal.traverse(region.targetTraversal)
+    targetTraversal
