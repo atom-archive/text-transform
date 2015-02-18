@@ -30,4 +30,4 @@ describe "LinesTransform", ->
     ]
 
     for [charactersPoint, linesPoint] in mappings
-      expect(linesLayer.fromLayerPosition(charactersLayer, Point(charactersPoint...))).toEqual Point(linesPoint...)
+      expect(linesLayer.fromPositionInLayer(Point(charactersPoint...), charactersLayer)).toEqual Point(linesPoint...)

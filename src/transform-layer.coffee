@@ -19,11 +19,11 @@ class TransformLayer
 
     regions
 
-  fromLayerPosition: (layer, layerPosition) ->
+  fromPositionInLayer: (position, layer) ->
     if @source isnt layer
-      sourcePosition = @source.fromLayerPosition(layerPosition)
+      sourcePosition = @source.fromLayerPosition(position)
     else
-      sourcePosition = layerPosition
+      sourcePosition = position
 
     sourceTraversal = Point(0, 0)
     targetTraversal = Point(0, 0)
