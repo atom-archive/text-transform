@@ -4,7 +4,7 @@ Point = require '../src/point'
 {expectValues} = require './spec-helper'
 
 describe "LinesTransform", ->
-  ffit "transforms the linear characters layer into a layer with regions for each line", ->
+  it "transforms the linear characters layer into a layer with regions for each line", ->
     buffer = new TextBuffer(text: "abc\ndefg\nhi")
     {charactersLayer, linesLayer} = buffer
 
