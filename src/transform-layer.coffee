@@ -7,8 +7,8 @@ class TransformLayer
 
   getRegions: ->
     regions = []
-    sourceStartPosition = Point(0, 0)
-    targetStartPosition = Point(0, 0)
+    sourceStartPosition = Point.ZERO
+    targetStartPosition = Point.ZERO
 
     loop
       region = @transform.getNextRegion({sourceStartPosition, targetStartPosition})
@@ -21,12 +21,12 @@ class TransformLayer
 
   fromPositionInLayer: (position, layer) ->
     if @source isnt layer
-      sourcePosition = @source.fromLayerPosition(position)
+      sourcePosition = @source.fromPositionInLayer(position, layer)
     else
       sourcePosition = position
 
-    sourceTraversal = Point(0, 0)
-    targetTraversal = Point(0, 0)
+    sourceTraversal = Point.ZERO
+    targetTraversal = Point.ZERO
 
     for region in @getRegions()
       nextSourceTraversal = sourceTraversal.traverse(region.sourceTraversal)
@@ -36,3 +36,23 @@ class TransformLayer
 
     overshoot = Point(sourcePosition.rows - sourceTraversal.rows, sourcePosition.columns - sourceTraversal.columns)
     targetTraversal.traverse(overshoot)
+
+  toPositionInLayer: (position, layer) ->
+    targetPosition = position
+
+    sourceTraversal = Point.ZERO
+    targetTraversal = Point.ZERO
+
+    for region in @getRegions()
+      nextTargetTraversal = targetTraversal.traverse(region.targetTraversal)
+      break if nextTargetTraversal.isGreaterThan(targetPosition)
+      targetTraversal = nextTargetTraversal
+      sourceTraversal = sourceTraversal.traverse(region.sourceTraversal)
+
+    overshoot = Point(targetPosition.rows - targetTraversal.rows, targetPosition.columns - targetTraversal.columns)
+    sourcePosition = sourceTraversal.traverse(overshoot)
+
+    if @source isnt layer
+      @source.toPositionInLayer(sourcePosition, layer)
+    else
+      sourcePosition
