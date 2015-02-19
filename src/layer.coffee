@@ -4,7 +4,6 @@ module.exports =
 class Layer
   constructor: (@source, @transform) ->
     @transform.initialize(@source)
-    @regions = @getRegions()
 
   getRegions: ->
     regions = []
@@ -67,7 +66,7 @@ class Layer
   positionOf: (string, start=Point(0, 0)) ->
     targetTraversal = Point.ZERO
 
-    for region in @regions
+    for region in @getRegions()
       nextTargetTraversal = targetTraversal.traverse(region.targetTraversal)
       if nextTargetTraversal.isGreaterThan(start)
         if start.isGreaterThan(targetTraversal)
