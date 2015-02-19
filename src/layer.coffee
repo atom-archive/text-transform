@@ -4,6 +4,7 @@ module.exports =
 class Layer
   constructor: (@source, @transform) ->
     @transform.initialize(@source)
+    @regions = @getRegions()
 
   getRegions: ->
     regions = []
@@ -18,6 +19,12 @@ class Layer
       regions.push(region)
 
     regions
+
+  getContent: ->
+    content = ""
+    for region in @getRegions()
+      content += region.content
+    content
 
   fromPositionInLayer: (position, layer) ->
     if @source isnt layer
@@ -60,17 +67,17 @@ class Layer
   positionOf: (string, start=Point(0, 0)) ->
     targetTraversal = Point.ZERO
 
-    for region in @getRegions()
+    for region in @regions
       nextTargetTraversal = targetTraversal.traverse(region.targetTraversal)
       if nextTargetTraversal.isGreaterThan(start)
-        if targetTraversal.isGreaterThan(start)
-          contentStartIndex = 0
+        if start.isGreaterThan(targetTraversal)
+          startIndex = pointToIndex(region.content, targetTraversal.traversal(start))
         else
-          contentStartIndex = start.columns - targetTraversal.columns
+          startIndex = 0
 
-        contentIndex = region.content.indexOf(string, contentStartIndex)
-        if contentIndex >= 0
-          return targetTraversal.traverse(Point(0, contentIndex))
+        index = region.content.indexOf(string, startIndex)
+        if index >= 0
+          return targetTraversal.traverse(indexToPoint(region.content, index))
 
       targetTraversal = nextTargetTraversal
 
@@ -83,17 +90,19 @@ class Layer
     for region in @getRegions()
       nextTargetTraversal = targetTraversal.traverse(region.targetTraversal)
       if nextTargetTraversal.isGreaterThan(start)
-        if targetTraversal.isGreaterThan(start)
-          contentStartIndex = 0
+        if start.isGreaterThan(targetTraversal)
+          startIndex = pointToIndex(region.content, targetTraversal.traversal(start))
         else
-          contentStartIndex = start.columns - targetTraversal.columns
+          startIndex = 0
 
         if nextTargetTraversal.isGreaterThan(end)
-          contentEndIndex = end.columns - targetTraversal.columns
+          endIndex = pointToIndex(region.content, targetTraversal.traversal(end))
         else
-          contentEndIndex = undefined
+          endIndex = undefined
 
-        content += region.content.slice(contentStartIndex, contentEndIndex)
+        content += region.content.slice(startIndex, endIndex)
+
+      targetTraversal = nextTargetTraversal
 
     content
 
@@ -102,3 +111,42 @@ class Layer
     for region in @getRegions()
       targetTraversal = targetTraversal.traverse(region.targetTraversal)
     targetTraversal
+
+pointToIndex = (string, point) ->
+  {rows, columns} = point
+  index = 0
+
+  loop
+    if rows > 0
+      newlineIndex = string.indexOf('\n', index)
+      if newlineIndex >= 0
+        index = newlineIndex
+        rows--
+      else
+        throw new Error("Point #{point} out of range in string #{JSON.stringify(string)}")
+    else
+      index += columns
+      if index <= string.length
+        return index
+      else
+        throw new Error("Point #{point} out of range in string #{JSON.stringify(string)}")
+
+indexToPoint = (string, index) ->
+  rows = 0
+  columns = 0
+
+  if index > string.length
+    throw new Error("Index #{index} out of range in string #{JSON.stringify(string)}")
+
+  startIndex = 0
+  loop
+    newlineIndex = string.indexOf('\n', startIndex)
+    if 0 <= newlineIndex <= index
+      rows++
+      columns = 0
+      startIndex = newlineIndex + 1
+    else
+      columns = index - startIndex
+      break
+
+  Point(rows, columns)
