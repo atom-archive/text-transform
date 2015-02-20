@@ -4,6 +4,7 @@ module.exports =
 class Layer
   constructor: (@source, @transform) ->
     @transform.initialize(@source)
+    @regions = @getRegions()
 
   getRegions: ->
     regions = []
@@ -21,7 +22,7 @@ class Layer
 
   getContent: ->
     content = ""
-    for region in @getRegions()
+    for region in @regions
       content += region.content
     content
 
@@ -34,13 +35,13 @@ class Layer
     sourceTraversal = Point.ZERO
     targetTraversal = Point.ZERO
 
-    for region in @getRegions()
+    for region in @regions
       nextSourceTraversal = sourceTraversal.traverse(region.sourceTraversal)
       break if nextSourceTraversal.isGreaterThan(sourcePosition)
       sourceTraversal = nextSourceTraversal
       targetTraversal = targetTraversal.traverse(region.targetTraversal)
 
-    overshoot = Point(sourcePosition.rows - sourceTraversal.rows, sourcePosition.columns - sourceTraversal.columns)
+    overshoot = sourceTraversal.traversal(sourcePosition)
     targetTraversal.traverse(overshoot)
 
   toPositionInLayer: (position, layer) ->
@@ -49,7 +50,7 @@ class Layer
     sourceTraversal = Point.ZERO
     targetTraversal = Point.ZERO
 
-    for region in @getRegions()
+    for region in @regions
       nextTargetTraversal = targetTraversal.traverse(region.targetTraversal)
       break if nextTargetTraversal.isGreaterThan(targetPosition)
       targetTraversal = nextTargetTraversal
@@ -64,88 +65,15 @@ class Layer
       sourcePosition
 
   positionOf: (string, start=Point(0, 0)) ->
-    targetTraversal = Point.ZERO
-
-    for region in @getRegions()
-      nextTargetTraversal = targetTraversal.traverse(region.targetTraversal)
-      if nextTargetTraversal.isGreaterThan(start)
-        if start.isGreaterThan(targetTraversal)
-          startIndex = pointToIndex(region.content, targetTraversal.traversal(start))
-        else
-          startIndex = 0
-
-        index = region.content.indexOf(string, startIndex)
-        if index >= 0
-          return targetTraversal.traverse(indexToPoint(region.content, index))
-
-      targetTraversal = nextTargetTraversal
-
-    undefined
+    if sourcePosition = @source.positionOf(string, @toPositionInLayer(start, @source))
+      pos =  @fromPositionInLayer(sourcePosition, @source)
+      return pos
 
   slice: (start, end=@getEndPosition()) ->
-    content = ""
-    targetTraversal = Point.ZERO
-
-    for region in @getRegions()
-      nextTargetTraversal = targetTraversal.traverse(region.targetTraversal)
-      if nextTargetTraversal.isGreaterThan(start)
-        if start.isGreaterThan(targetTraversal)
-          startIndex = pointToIndex(region.content, targetTraversal.traversal(start))
-        else
-          startIndex = 0
-
-        if nextTargetTraversal.isGreaterThan(end)
-          endIndex = pointToIndex(region.content, targetTraversal.traversal(end))
-        else
-          endIndex = undefined
-
-        content += region.content.slice(startIndex, endIndex)
-
-      targetTraversal = nextTargetTraversal
-
-    content
+    @source.slice(@toPositionInLayer(start, @source), @toPositionInLayer(end, @source))
 
   getEndPosition: ->
     targetTraversal = Point.ZERO
     for region in @getRegions()
       targetTraversal = targetTraversal.traverse(region.targetTraversal)
     targetTraversal
-
-pointToIndex = (string, point) ->
-  {rows, columns} = point
-  index = 0
-
-  loop
-    if rows > 0
-      newlineIndex = string.indexOf('\n', index)
-      if newlineIndex >= 0
-        index = newlineIndex
-        rows--
-      else
-        throw new Error("Point #{point} out of range in string #{JSON.stringify(string)}")
-    else
-      index += columns
-      if index <= string.length
-        return index
-      else
-        throw new Error("Point #{point} out of range in string #{JSON.stringify(string)}")
-
-indexToPoint = (string, index) ->
-  rows = 0
-  columns = 0
-
-  if index > string.length
-    throw new Error("Index #{index} out of range in string #{JSON.stringify(string)}")
-
-  startIndex = 0
-  loop
-    newlineIndex = string.indexOf('\n', startIndex)
-    if 0 <= newlineIndex <= index
-      rows++
-      columns = 0
-      startIndex = newlineIndex + 1
-    else
-      columns = index - startIndex
-      break
-
-  Point(rows, columns)
