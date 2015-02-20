@@ -9,8 +9,7 @@ describe "LinesTransform", ->
     charactersLayer = buffer.getCharactersLayer()
     linesLayer = buffer.getLinesLayer()
 
-    regions = linesLayer.getRegions()
-    expect(regions.map (r) -> r.toString()).toEqual [
+    expect(linesLayer.regions.map (r) -> r.toString()).toEqual [
       '<(0, 4):(1, 0) - "abc\\n">'
       '<(0, 5):(1, 0) - "defg\\n">'
       '<(0, 2):(0, 2) - "hi">'

@@ -4,9 +4,9 @@ module.exports =
 class Layer
   constructor: (@source, @transform) ->
     @transform.initialize(@source)
-    @regions = @getRegions()
+    @regions = @buildRegions()
 
-  getRegions: ->
+  buildRegions: ->
     regions = []
     sourceStartPosition = Point.ZERO
     targetStartPosition = Point.ZERO
@@ -74,6 +74,6 @@ class Layer
 
   getEndPosition: ->
     targetTraversal = Point.ZERO
-    for region in @getRegions()
+    for region in @buildRegions()
       targetTraversal = targetTraversal.traverse(region.targetTraversal)
     targetTraversal
