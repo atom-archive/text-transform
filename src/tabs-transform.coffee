@@ -12,14 +12,18 @@ class TabsTransform
       if tabPosition.isEqual(sourceStartPosition)
         tabLength = targetStartPosition.columns % @tabLength
         tabLength = @tabLength if tabLength is 0
-        content = ''
-        content += ' ' for i in [0...tabLength] by 1
-        new Region(Point(0, 1), Point(0, tabLength), content)
+        new Region(Point(0, 1), Point(0, tabLength), 'exclusive')
       else
-        content = @source.slice(sourceStartPosition, tabPosition)
         traversal = sourceStartPosition.traversal(tabPosition)
-        new Region(traversal, traversal, content)
+        new Region(traversal, traversal)
     else
-      content = @source.slice(sourceStartPosition)
       traversal = sourceStartPosition.traversal(@source.getEndPosition())
-      new Region(traversal, traversal, content)
+      new Region(traversal, traversal)
+
+  contentForRegion: ({sourceStartPosition, region}) ->
+    if @source.characterAt(sourceStartPosition) is '\t'
+      content = ""
+      content += " " for i in [0...region.targetTraversal.columns] by 1
+      content
+    else
+      @source.slice(sourceStartPosition, sourceStartPosition.traverse(region.sourceTraversal))

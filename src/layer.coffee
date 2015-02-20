@@ -21,10 +21,7 @@ class Layer
     regions
 
   getContent: ->
-    content = ""
-    for region in @regions
-      content += region.content
-    content
+    @slice(Point.ZERO, @getEndPosition())
 
   fromPositionInLayer: (position, layer) ->
     if @source isnt layer
@@ -44,7 +41,7 @@ class Layer
     overshoot = sourceTraversal.traversal(sourcePosition)
     targetTraversal.traverse(overshoot)
 
-  toPositionInLayer: (position, layer) ->
+  toPositionInLayer: (position, layer, options) ->
     targetPosition = position
 
     sourceTraversal = Point.ZERO
@@ -52,12 +49,19 @@ class Layer
 
     for region in @regions
       nextTargetTraversal = targetTraversal.traverse(region.targetTraversal)
+      nextSourceTraversal = sourceTraversal.traverse(region.sourceTraversal)
       break if nextTargetTraversal.isGreaterThan(targetPosition)
       targetTraversal = nextTargetTraversal
-      sourceTraversal = sourceTraversal.traverse(region.sourceTraversal)
+      sourceTraversal = nextSourceTraversal
 
-    overshoot = Point(targetPosition.rows - targetTraversal.rows, targetPosition.columns - targetTraversal.columns)
-    sourcePosition = sourceTraversal.traverse(overshoot)
+    if region.clip
+      if options?.clip is 'forward'
+        sourcePosition = nextSourceTraversal
+      else
+        sourcePosition = sourceTraversal
+    else
+      overshoot = targetTraversal.traversal(targetPosition)
+      sourcePosition = sourceTraversal.traverse(overshoot)
 
     if @source isnt layer
       @source.toPositionInLayer(sourcePosition, layer)
@@ -69,11 +73,55 @@ class Layer
       pos =  @fromPositionInLayer(sourcePosition, @source)
       return pos
 
+  characterAt: (position) ->
+    @slice(position, position.traverse(Point(0, 1)))
+
   slice: (start, end=@getEndPosition()) ->
-    @source.slice(@toPositionInLayer(start, @source), @toPositionInLayer(end, @source))
+    debugger if global.debug
+    contentStart = null
+    contentEnd = null
+    content = ""
+
+    targetStartPosition = Point.ZERO
+    sourceStartPosition = Point.ZERO
+
+    for region in @regions
+      break if targetStartPosition.compare(end) >= 0
+
+      nextTargetStartPosition = targetStartPosition.traverse(region.targetTraversal)
+      nextSourceStartPosition = sourceStartPosition.traverse(region.sourceTraversal)
+
+      if nextTargetStartPosition.isGreaterThan(start)
+        contentStart ?= targetStartPosition
+        contentEnd = nextTargetStartPosition
+        content += @transform.contentForRegion({region, sourceStartPosition, targetStartPosition})
+
+      targetStartPosition = nextTargetStartPosition
+      sourceStartPosition = nextSourceStartPosition
+
+    contentStartIndex = 0
+    if contentStart?
+      {rows, columns} = contentStart.traversal(start)
+      while rows > 0
+        contentStartIndex = content.indexOf('\n', contentStartIndex) + 1
+        rows--
+      contentStartIndex += columns
+
+    contentEndIndex = content.length
+    if contentEnd?
+      contentEndIndex = contentStartIndex
+      {rows, columns} = start.traversal(end)
+      while rows > 0
+        contentEndIndex = content.indexOf('\n', contentEndIndex) + 1
+        rows--
+      contentEndIndex += columns
+
+
+    content = content.slice(contentStartIndex, contentEndIndex)
+    content
 
   getEndPosition: ->
     targetTraversal = Point.ZERO
-    for region in @buildRegions()
+    for region in @regions
       targetTraversal = targetTraversal.traverse(region.targetTraversal)
     targetTraversal

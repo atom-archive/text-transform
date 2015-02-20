@@ -1,6 +1,6 @@
 module.exports =
 class Region
-  constructor: (@sourceTraversal, @targetTraversal, @content) ->
+  constructor: (@sourceTraversal, @targetTraversal, @clip) ->
 
   toString: ->
-    "<#{@sourceTraversal}:#{@targetTraversal} - #{JSON.stringify(@content)}>"
+    "<#{@sourceTraversal}:#{@targetTraversal}>"
