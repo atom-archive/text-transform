@@ -3,7 +3,7 @@ Point = require '../src/point'
 
 {expectValues} = require './spec-helper'
 
-describe "LinesTransform", ->
+describe "lines layer", ->
   it "transforms the linear characters layer into a layer with regions for each line", ->
     buffer = new TextBuffer(text: "abc\ndefg\nhi")
     charactersLayer = buffer.getCharactersLayer()

@@ -1,7 +1,7 @@
 TextBuffer = require '../src/text-buffer'
 Point = require '../src/point'
 
-describe "TabsTransform", ->
+describe "tabs layer", ->
   it "replaces hard tab characters with whitespace", ->
     buffer = new TextBuffer(text: "\tab\tcde\tf")
     linesLayer = buffer.getLinesLayer()
