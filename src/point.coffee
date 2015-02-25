@@ -30,6 +30,9 @@ class Point
   isGreaterThan: (other) ->
     @compare(other) > 0
 
+  isLessThan: (other) ->
+    @compare(other) < 0
+
   compare: (other) ->
     if @rows > other.rows
       1

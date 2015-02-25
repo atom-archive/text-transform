@@ -9,11 +9,9 @@ describe "lines layer", ->
     charactersLayer = buffer.getCharactersLayer()
     linesLayer = buffer.getLinesLayer()
 
-    expect(linesLayer.getContent()).toBe """
-      abc
-      defg
-      hi
-    """
+    expect(linesLayer.slice(Point(0, 0), Point(1, 0))).toBe "abc"
+    expect(linesLayer.slice(Point(1, 0), Point(2, 0))).toBe "defg"
+    expect(linesLayer.slice(Point(2, 0), Point(2, 2))).toBe "hi"
 
     mappings = [
       [[0, 0], [0, 0]]

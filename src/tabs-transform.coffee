@@ -20,10 +20,11 @@ class TabsTransform
       traversal = sourceStartPosition.traversal(@source.getEndPosition())
       new Region(traversal, traversal)
 
-  contentForRegion: ({sourceStartPosition, region}) ->
+  getContent: ({sourceStartPosition, sourceEndPosition, targetStartPosition, targetEndPosition}) ->
     if @source.characterAt(sourceStartPosition) is '\t'
+      length = targetEndPosition.columns - targetStartPosition.columns
       content = ""
-      content += " " for i in [0...region.targetTraversal.columns] by 1
+      content += " " for i in [0...length] by 1
       content
     else
-      @source.slice(sourceStartPosition, sourceStartPosition.traverse(region.sourceTraversal))
+      @source.slice(sourceStartPosition, sourceEndPosition)

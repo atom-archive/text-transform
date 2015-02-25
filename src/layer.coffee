@@ -82,42 +82,35 @@ class Layer
     contentEnd = null
     content = ""
 
-    targetStartPosition = Point.ZERO
-    sourceStartPosition = Point.ZERO
+    targetTraversal = Point.ZERO
+    sourceTraversal = Point.ZERO
 
     for region in @regions
-      break if targetStartPosition.compare(end) >= 0
+      break if targetTraversal.compare(end) >= 0
 
-      nextTargetStartPosition = targetStartPosition.traverse(region.targetTraversal)
-      nextSourceStartPosition = sourceStartPosition.traverse(region.sourceTraversal)
+      nextTargetTraversal = targetTraversal.traverse(region.targetTraversal)
+      nextSourceTraversal = sourceTraversal.traverse(region.sourceTraversal)
 
-      if nextTargetStartPosition.isGreaterThan(start)
-        contentStart ?= targetStartPosition
-        contentEnd = nextTargetStartPosition
-        content += @transform.contentForRegion({region, sourceStartPosition, targetStartPosition})
+      if nextTargetTraversal.isGreaterThan(start)
+        if start.isGreaterThan(targetTraversal)
+          targetStartPosition = start
+          sourceStartPosition = sourceTraversal.traverse(targetTraversal.traversal(start))
+        else
+          targetStartPosition = targetTraversal
+          sourceStartPosition = sourceTraversal
 
-      targetStartPosition = nextTargetStartPosition
-      sourceStartPosition = nextSourceStartPosition
+        if end.isLessThan(nextTargetTraversal)
+          targetEndPosition = end
+          sourceEndPosition = sourceTraversal.traverse(targetTraversal.traversal(end))
+        else
+          targetEndPosition = nextTargetTraversal
+          sourceEndPosition = nextSourceTraversal
 
-    contentStartIndex = 0
-    if contentStart?
-      {rows, columns} = contentStart.traversal(start)
-      while rows > 0
-        contentStartIndex = content.indexOf('\n', contentStartIndex) + 1
-        rows--
-      contentStartIndex += columns
+        content += @transform.getContent({sourceStartPosition, targetStartPosition, sourceEndPosition, targetEndPosition})
 
-    contentEndIndex = content.length
-    if contentEnd?
-      contentEndIndex = contentStartIndex
-      {rows, columns} = start.traversal(end)
-      while rows > 0
-        contentEndIndex = content.indexOf('\n', contentEndIndex) + 1
-        rows--
-      contentEndIndex += columns
+      targetTraversal = nextTargetTraversal
+      sourceTraversal = nextSourceTraversal
 
-
-    content = content.slice(contentStartIndex, contentEndIndex)
     content
 
   getEndPosition: ->

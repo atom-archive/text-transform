@@ -6,7 +6,7 @@ describe "tabs layer", ->
     buffer = new TextBuffer(text: "\tab\tcde\tf")
     linesLayer = buffer.getLinesLayer()
     tabsLayer = buffer.buildTabsLayer(2)
-    expect(tabsLayer.getContent()).toBe "  ab  cde f"
+    expect(tabsLayer.slice(Point(0, 0), Point(1, 0))).toBe "  ab  cde f"
 
     mappings = [
       [[0, 0], [0, 0]]
@@ -33,7 +33,11 @@ describe "tabs layer", ->
     buffer = new TextBuffer(text: "\tab\ncde\n\tfg")
     linesLayer = buffer.getLinesLayer()
     tabsLayer = buffer.buildTabsLayer(2)
-    expect(tabsLayer.getContent()).toBe "  ab\ncde\n  fg"
+
+    global.debug = true
+    expect(tabsLayer.slice(Point(0, 0), Point(1, 0))).toBe "  ab"
+    expect(tabsLayer.slice(Point(1, 0), Point(2, 0))).toBe "cde"
+    expect(tabsLayer.slice(Point(2, 0), Point(3, 0))).toBe "  fg"
 
     mappings = [
       [[0, 0], [0, 0]]

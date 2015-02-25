@@ -15,5 +15,7 @@ class LinesTransform
       traversal = sourceStartPosition.traversal(@source.getEndPosition())
       new Region(traversal, traversal)
 
-  contentForRegion: ({sourceStartPosition, region}) ->
-    @source.slice(sourceStartPosition, sourceStartPosition.traverse(region.sourceTraversal))
+  getContent: ({sourceStartPosition, sourceEndPosition, targetStartPosition, targetEndPosition}) ->
+    if targetStartPosition.rows < targetEndPosition.rows
+      sourceEndPosition = sourceEndPosition.traverse(Point(0, -1))
+    @source.slice(sourceStartPosition, sourceEndPosition)
