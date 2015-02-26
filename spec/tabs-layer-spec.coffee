@@ -35,8 +35,8 @@ describe "tabs layer", ->
     tabsLayer = buffer.buildTabsLayer(2)
 
     global.debug = true
-    expect(tabsLayer.slice(Point(0, 0), Point(1, 0))).toBe "  ab"
-    expect(tabsLayer.slice(Point(1, 0), Point(2, 0))).toBe "cde"
+    expect(tabsLayer.slice(Point(0, 0), Point(1, 0))).toBe "  ab "
+    expect(tabsLayer.slice(Point(1, 0), Point(2, 0))).toBe "cde "
     expect(tabsLayer.slice(Point(2, 0), Point(3, 0))).toBe "  fg"
 
     mappings = [
