@@ -54,7 +54,7 @@ class Layer
       targetTraversal = nextTargetTraversal
       sourceTraversal = nextSourceTraversal
 
-    if region.clip
+    if region.clip and targetTraversal.isLessThan(position)
       if options?.clip is 'forward'
         sourcePosition = nextSourceTraversal
       else

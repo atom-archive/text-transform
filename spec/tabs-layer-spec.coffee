@@ -30,6 +30,7 @@ describe "tabs layer", ->
         expect(tabsLayer.fromPositionInLayer(Point(linesPoint...), linesLayer)).toEqual Point(tabsPoint...)
       expect(tabsLayer.toPositionInLayer(Point(tabsPoint...), linesLayer, options)).toEqual Point(linesPoint...)
 
+    expect(tabsLayer.clipPosition(Point(0, 0), 'forward')).toEqual Point(0, 0)
     expect(tabsLayer.clipPosition(Point(0, 1), 'backward')).toEqual Point(0, 0)
     expect(tabsLayer.clipPosition(Point(0, 1), 'forward')).toEqual Point(0, 2)
 
