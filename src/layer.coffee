@@ -70,14 +70,11 @@ class Layer
 
   positionOf: (string, start=Point(0, 0)) ->
     if sourcePosition = @source.positionOf(string, @toPositionInLayer(start, @source))
-      pos =  @fromPositionInLayer(sourcePosition, @source)
-      return pos
 
   characterAt: (position) ->
     @slice(position, position.traverse(Point(0, 1)))
 
   slice: (start, end=@getEndPosition()) ->
-    debugger if global.debug
     contentStart = null
     contentEnd = null
     content = ""
