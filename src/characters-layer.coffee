@@ -21,6 +21,16 @@ class CharactersLayer
     unless point.rows is 0 and 0 <= point.columns <= @content.length
       throw new Error("Point #{point} out of range")
 
-  sourceToTarget: (point) -> point
+  sourceToTarget: (position) -> position
+
+  clipPosition: (position) ->
+    {rows, columns} = position
+    rows = Math.max(0, rows)
+    columns = Math.max(0, columns)
+    if rows > 0
+      rows = 0
+      columns = Infinity
+    columns = Math.min(@content.length, columns)
+    Point(rows, columns)
 
   getEndPosition: -> Point(0, @content.length)

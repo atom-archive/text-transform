@@ -31,3 +31,12 @@ describe "lines layer", ->
     for [charactersPoint, linesPoint] in mappings
       expect(linesLayer.fromPositionInLayer(Point(charactersPoint...), charactersLayer)).toEqual Point(linesPoint...)
       expect(linesLayer.toPositionInLayer(Point(linesPoint...), charactersLayer)).toEqual Point(charactersPoint...)
+
+    expect(linesLayer.clipPosition(Point(-1, -1))).toEqual Point(0, 0)
+    expect(linesLayer.clipPosition(Point(-1, 2))).toEqual Point(0, 2)
+    expect(linesLayer.clipPosition(Point(1, -2))).toEqual Point(1, 0)
+    expect(linesLayer.clipPosition(Point(1, 2))).toEqual Point(1, 2)
+    expect(linesLayer.clipPosition(Point(1, 4))).toEqual Point(1, 4)
+    expect(linesLayer.clipPosition(Point(1, 5))).toEqual Point(1, 4)
+    expect(linesLayer.clipPosition(Point(1, 5), 'forward')).toEqual Point(2, 0)
+    expect(linesLayer.clipPosition(Point(3, 0))).toEqual Point(2, 2)

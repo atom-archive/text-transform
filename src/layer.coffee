@@ -63,13 +63,31 @@ class Layer
       overshoot = targetTraversal.traversal(targetPosition)
       sourcePosition = sourceTraversal.traverse(overshoot)
 
+      if sourcePosition.compare(nextSourceTraversal) >= 0
+        if options?.clip is 'forward'
+          sourcePosition = nextSourceTraversal
+        else
+          sourcePosition = nextSourceTraversal
+          if sourceTraversal.isLessThan(nextSourceTraversal)
+            sourcePosition = sourcePosition.traverse(Point(0, -1))
+
+      sourcePosition = @source.clipPosition(sourcePosition, options?.clip)
+
     if @source isnt layer
       @source.toPositionInLayer(sourcePosition, layer)
     else
       sourcePosition
 
+  clipPosition: (position, direction='backward') ->
+    {rows, columns} = position
+    rows = Math.max(0, rows)
+    columns = Math.max(0, columns)
+    position = Point(rows, columns)
+    @fromPositionInLayer(@toPositionInLayer(position, @source, clip: direction), @source)
+
   positionOf: (string, start=Point(0, 0)) ->
     if sourcePosition = @source.positionOf(string, @toPositionInLayer(start, @source))
+      @fromPositionInLayer(sourcePosition, @source)
 
   characterAt: (position) ->
     @slice(position, position.traverse(Point(0, 1)))
