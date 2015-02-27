@@ -5,11 +5,10 @@ class Layer
   constructor: (@source, @transform) ->
     @transform.initialize(@source)
     @regions = @buildRegions()
+    @source.onDidChange?(@sourceDidChange.bind(this))
 
-  buildRegions: ->
+  buildRegions: (sourceStartPosition=Point.ZERO, targetStartPosition=Point.ZERO) ->
     regions = []
-    sourceStartPosition = Point.ZERO
-    targetStartPosition = Point.ZERO
 
     loop
       region = @transform.getNextRegion({sourceStartPosition, targetStartPosition})
@@ -19,6 +18,17 @@ class Layer
       regions.push(region)
 
     regions
+
+  sourceDidChange: ({startPosition, extent, text}) ->
+    sourceTraversal = Point.ZERO
+    targetTraversal = Point.ZERO
+
+    for region, index in @regions
+      break if sourceTraversal.compare(startPosition) >= 0
+      sourceTraversal = sourceTraversal.traverse(region.sourceTraversal)
+      targetTraversal = targetTraversal.traverse(region.targetTraversal)
+
+    @regions.splice(index, @regions.length - index, @buildRegions(sourceTraversal, targetTraversal)...)
 
   getContent: ->
     @slice(Point.ZERO, @getEndPosition())

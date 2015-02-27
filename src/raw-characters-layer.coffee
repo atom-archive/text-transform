@@ -1,9 +1,14 @@
+{Emitter} = require 'event-kit'
 Point = require './point'
 Region = require './region'
 
 module.exports =
 class RawCharactersLayer
   constructor: (@content) ->
+    @emitter = new Emitter
+
+  onDidChange: (fn) ->
+    @emitter.on 'did-change', fn
 
   positionOf: (string, start=Point(0, 0)) ->
     @assertPointInRange(start)
@@ -12,10 +17,17 @@ class RawCharactersLayer
     if columns >= 0
       Point(0, columns)
 
+  splice: (startPosition, extent, text) ->
+    endPosition = startPosition.traverse(extent)
+    @assertPointInRange(startPosition)
+    @assertPointInRange(endPosition)
+    @content = @content.slice(0, startPosition.columns) + text + @content.slice(endPosition.columns)
+    @emitter.emit 'did-change', {startPosition, extent, text}
+
   slice: (start, end) ->
-    @assertPointInRange(start)
+    @assertPointInRange(start) if start?
     @assertPointInRange(end) if end?
-    @content.slice(start.columns, end?.columns)
+    @content.slice(start?.columns, end?.columns)
 
   assertPointInRange: (point) ->
     unless point.rows is 0 and 0 <= point.columns <= @content.length
