@@ -2,7 +2,7 @@ Point = require './point'
 Region = require './region'
 
 module.exports =
-class CharactersLayer
+class RawCharactersLayer
   constructor: (@content) ->
 
   positionOf: (string, start=Point(0, 0)) ->
@@ -34,3 +34,7 @@ class CharactersLayer
     Point(rows, columns)
 
   getEndPosition: -> Point(0, @content.length)
+
+  charCodeAtPosition: (position) ->
+    @assertPointInRange(position)
+    @content.charCodeAt(position.columns)
