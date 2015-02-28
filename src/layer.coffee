@@ -7,10 +7,11 @@ class Layer
     @regions = @buildRegions()
     @source.onDidChange?(@sourceDidChange.bind(this))
 
-  buildRegions: (sourceStartPosition=Point.ZERO, targetStartPosition=Point.ZERO) ->
+  buildRegions: (sourceStartPosition=Point.ZERO, sourceEndPosition=@source.getEndPosition()) ->
+    targetStartPosition = @fromPositionInLayer(sourceStartPosition, @source)
     regions = []
 
-    loop
+    while sourceStartPosition.isLessThan(sourceEndPosition)
       region = @transform.getNextRegion({sourceStartPosition, targetStartPosition})
       break unless region.sourceTraversal.isGreaterThan(Point.ZERO) or region.targetTraversal.isGreaterThan(Point.ZERO)
       sourceStartPosition = sourceStartPosition.traverse(region.sourceTraversal)
@@ -19,21 +20,40 @@ class Layer
 
     regions
 
-  sourceDidChange: ({startPosition, extent, text}) ->
+  sourceDidChange: ({startPosition, oldExtent, newExtent}) ->
+    endPosition = startPosition.traverse(oldExtent)
     sourceTraversal = Point.ZERO
     targetTraversal = Point.ZERO
 
+    invalidatedRegionsStartIndex = null
+    invalidatedRegionsStartPosition = null
+
     for region, index in @regions
-      break if sourceTraversal.compare(startPosition) >= 0
+      break if sourceTraversal.compare(endPosition) > 0
+
+      if sourceTraversal.compare(startPosition) >= 0
+        invalidatedRegionsStartIndex ?= index
+        invalidatedRegionsStartPosition ?= sourceTraversal
+
       sourceTraversal = sourceTraversal.traverse(region.sourceTraversal)
       targetTraversal = targetTraversal.traverse(region.targetTraversal)
 
-    @regions.splice(index, @regions.length - index, @buildRegions(sourceTraversal, targetTraversal)...)
+    invalidatedRegionsEndIndex = index
+    invalidatedRegionsEndPosition = sourceTraversal
+
+    extentDelta = oldExtent.traversal(newExtent)
+    replacementRegionsEndPosition = invalidatedRegionsEndPosition.traverse(extentDelta)
+
+    replacementRegions = @buildRegions(invalidatedRegionsStartPosition, replacementRegionsEndPosition)
+    count = invalidatedRegionsEndIndex - invalidatedRegionsStartIndex
+    @regions.splice(invalidatedRegionsStartIndex, count, replacementRegions...)
 
   getContent: ->
     @slice(Point.ZERO, @getEndPosition())
 
   fromPositionInLayer: (position, layer) ->
+    return position if position.isEqual(Point.ZERO)
+
     if @source isnt layer
       sourcePosition = @source.fromPositionInLayer(position, layer)
     else
@@ -52,6 +72,8 @@ class Layer
     targetTraversal.traverse(overshoot)
 
   toPositionInLayer: (position, layer, options) ->
+    return position if position.isEqual(Point.ZERO)
+
     targetPosition = position
 
     sourceTraversal = Point.ZERO

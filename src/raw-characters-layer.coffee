@@ -17,12 +17,13 @@ class RawCharactersLayer
     if columns >= 0
       Point(0, columns)
 
-  splice: (startPosition, extent, text) ->
-    endPosition = startPosition.traverse(extent)
+  splice: (startPosition, oldExtent, newText) ->
+    endPosition = startPosition.traverse(oldExtent)
     @assertPointInRange(startPosition)
     @assertPointInRange(endPosition)
-    @content = @content.slice(0, startPosition.columns) + text + @content.slice(endPosition.columns)
-    @emitter.emit 'did-change', {startPosition, extent, text}
+    @content = @content.slice(0, startPosition.columns) + newText + @content.slice(endPosition.columns)
+    newExtent = new Point(0, newText.length)
+    @emitter.emit 'did-change', {startPosition, oldExtent, newExtent, newText}
 
   slice: (start, end) ->
     @assertPointInRange(start) if start?
