@@ -38,7 +38,7 @@ class Layer
       targetTraversal = targetTraversal.traverse(region.targetTraversal)
 
     invalidatedCount = index - invalidatedRegionsStartIndex
-    replacementRegionsEndPosition = sourceTraversal.traverse(oldExtent.traversal(newExtent))
+    replacementRegionsEndPosition = sourceTraversal.traverse(newExtent.traversalFrom(oldExtent))
     replacementRegions = @buildRegions(invalidatedRegionsStartPosition, replacementRegionsEndPosition)
     @regions.splice(invalidatedRegionsStartIndex, invalidatedCount, replacementRegions...)
 
@@ -62,7 +62,7 @@ class Layer
       sourceTraversal = nextSourceTraversal
       targetTraversal = targetTraversal.traverse(region.targetTraversal)
 
-    overshoot = sourceTraversal.traversal(sourcePosition)
+    overshoot = sourcePosition.traversalFrom(sourceTraversal)
     targetTraversal.traverse(overshoot)
 
   toPositionInLayer: (position, layer, options) ->
@@ -86,7 +86,7 @@ class Layer
       else
         sourcePosition = sourceTraversal
     else
-      overshoot = targetTraversal.traversal(targetPosition)
+      overshoot = targetPosition.traversalFrom(targetTraversal)
       sourcePosition = sourceTraversal.traverse(overshoot)
 
       if sourcePosition.compare(nextSourceTraversal) >= 0
@@ -135,14 +135,14 @@ class Layer
       if nextTargetTraversal.isGreaterThan(start)
         if start.isGreaterThan(targetTraversal)
           targetStartPosition = start
-          sourceStartPosition = sourceTraversal.traverse(targetTraversal.traversal(start))
+          sourceStartPosition = sourceTraversal.traverse(start.traversalFrom(targetTraversal))
         else
           targetStartPosition = targetTraversal
           sourceStartPosition = sourceTraversal
 
         if end.isLessThan(nextTargetTraversal)
           targetEndPosition = end
-          sourceEndPosition = sourceTraversal.traverse(targetTraversal.traversal(end))
+          sourceEndPosition = sourceTraversal.traverse(end.traversalFrom(targetTraversal))
         else
           targetEndPosition = nextTargetTraversal
           sourceEndPosition = nextSourceTraversal

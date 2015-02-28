@@ -22,7 +22,7 @@ class CharactersTransform
       else
         sourcePosition = sourcePosition.traverse(Point(0, 1))
 
-    traversal = sourceStartPosition.traversal(sourcePosition)
+    traversal = sourcePosition.traversalFrom(sourceStartPosition)
     new Region(traversal, traversal)
 
   getContent: ({sourceStartPosition, sourceEndPosition}) ->

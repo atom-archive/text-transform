@@ -14,10 +14,10 @@ class TabsTransform
         tabLength = @tabLength if tabLength is 0
         new Region(Point(0, 1), Point(0, tabLength), 'exclusive')
       else
-        traversal = sourceStartPosition.traversal(tabPosition)
+        traversal = tabPosition.traversalFrom(sourceStartPosition)
         new Region(traversal, traversal)
     else
-      traversal = sourceStartPosition.traversal(@source.getEndPosition())
+      traversal = @source.getEndPosition().traversalFrom(sourceStartPosition)
       new Region(traversal, traversal)
 
   getContent: ({sourceStartPosition, sourceEndPosition, targetStartPosition, targetEndPosition}) ->

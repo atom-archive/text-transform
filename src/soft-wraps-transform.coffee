@@ -25,7 +25,7 @@ class SoftWrapsTransform
       sourcePosition = nextSourcePosition
 
     sourceEndPosition ?= sourcePosition
-    sourceTraversal = sourceStartPosition.traversal(sourceEndPosition)
+    sourceTraversal = sourceEndPosition.traversalFrom(sourceStartPosition)
     targetTraversal ?= sourceTraversal
     new Region(sourceTraversal, targetTraversal)
 
