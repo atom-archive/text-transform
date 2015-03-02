@@ -5,6 +5,9 @@ module.exports =
 class LinesTransform
   initialize: (@source) ->
 
+  getNextRegions: ({sourceStartPosition}) ->
+    [@getNextRegion({sourceStartPosition})]
+
   getNextRegion: ({sourceStartPosition}) ->
     if newlinePosition = @source.positionOf('\n', sourceStartPosition)
       sourceEndPosition = newlinePosition.traverse(Point(0, 1))
