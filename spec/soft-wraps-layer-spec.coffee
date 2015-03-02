@@ -26,6 +26,7 @@ describe "soft wraps layer", ->
 
     expect(softWrapsLayer.clipPosition(Point(1, 6), 'backward')).toEqual Point(1, 5)
     expect(softWrapsLayer.clipPosition(Point(1, 6), 'forward')).toEqual Point(2, 2)
+    expect(softWrapsLayer.clipPosition(Point(2, 1), 'backward')).toEqual Point(1, 5)
 
   it "soft-wraps lines based on line length, ::baseCharacterWidth, and ::contentFrameWidth", ->
     buffer = new TextBuffer(text: 'abc def ghi jklmno\tpqr')
