@@ -2,7 +2,7 @@ Point = require './point'
 Region = require './region'
 
 module.exports =
-class TabsTransform
+class HardTabsTransform
   constructor: (@tabLength) ->
 
   initialize: (@source) ->

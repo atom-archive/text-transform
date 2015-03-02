@@ -14,7 +14,7 @@ describe "Layer", ->
       expect(linesLayer.positionOf('a', Point(0, 1))).toEqual Point(2, 2)
 
       buffer = new TextBuffer(text: "\tab\ncbd\n\tef")
-      tabsLayer = buffer.buildTabsLayer(2)
+      tabsLayer = buffer.buildHardTabsLayer(2)
 
       expect(tabsLayer.positionOf('a')).toEqual Point(0, 2)
       expect(tabsLayer.positionOf('b')).toEqual Point(0, 3)

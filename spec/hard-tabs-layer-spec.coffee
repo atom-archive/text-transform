@@ -1,11 +1,11 @@
 TextBuffer = require '../src/text-buffer'
 Point = require '../src/point'
 
-describe "tabs layer", ->
+describe "hard tabs layer", ->
   it "replaces hard tab characters with whitespace", ->
     buffer = new TextBuffer(text: "\tab\tcde\tf")
     linesLayer = buffer.getLinesLayer()
-    tabsLayer = buffer.buildTabsLayer(2)
+    tabsLayer = buffer.buildHardTabsLayer(2)
     expect(tabsLayer.slice(Point(0, 0), Point(1, 0))).toBe "  ab  cde f"
 
     mappings = [
@@ -36,7 +36,7 @@ describe "tabs layer", ->
 
     buffer = new TextBuffer(text: "\tab\ncd\t\n\tfg")
     linesLayer = buffer.getLinesLayer()
-    tabsLayer = buffer.buildTabsLayer(2)
+    tabsLayer = buffer.buildHardTabsLayer(2)
 
     expect(tabsLayer.slice(Point(0, 0), Point(1, 0))).toBe "  ab "
     expect(tabsLayer.slice(Point(1, 0), Point(2, 0))).toBe "cd   "
