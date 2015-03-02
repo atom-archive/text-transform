@@ -6,6 +6,9 @@ module.exports =
 class CharactersTransform
   initialize: (@source) ->
 
+  getNextRegions: ({sourceStartPosition}) ->
+    [@getNextRegion({sourceStartPosition})]
+
   getNextRegion: ({sourceStartPosition}) ->
     sourcePosition = sourceStartPosition
     maxSourcePosition = @source.getEndPosition()

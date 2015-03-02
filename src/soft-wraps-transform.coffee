@@ -7,6 +7,9 @@ class SoftWrapsTransform
 
   initialize: (@source) ->
 
+  getNextRegions: ({sourceStartPosition}) ->
+    [@getNextRegion({sourceStartPosition})]
+
   getNextRegion: ({sourceStartPosition}) ->
     sourceLineEnd = @source.clipPosition(sourceStartPosition.traverse(Point(0, Infinity)))
     width = 0

@@ -7,6 +7,9 @@ class HardTabsTransform
 
   initialize: (@source) ->
 
+  getNextRegions: ({sourceStartPosition, targetStartPosition}) ->
+    [@getNextRegion({sourceStartPosition, targetStartPosition})]
+
   getNextRegion: ({sourceStartPosition, targetStartPosition}) ->
     if tabPosition = @source.positionOf('\t', sourceStartPosition)
       if tabPosition.isEqual(sourceStartPosition)
