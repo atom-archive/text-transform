@@ -38,11 +38,11 @@ class SoftWrapsTransform
     regions.push(new Region(sourceTraversal, sourceTraversal)) if regions.length == 0
     regions
 
-  hasTabAt: (sourceStartPosition) ->
-    tabPosition = @source.positionOf('\t', sourceStartPosition)
+  hasTabAt: (position) ->
+    tabPosition = @source.positionOf('\t', position)
     return unless tabPosition
 
-    tabPosition.isEqual(sourceStartPosition)
+    tabPosition.isEqual(position)
 
   getContent: ({sourceStartPosition, sourceEndPosition, targetStartPosition, targetEndPosition}) ->
     if sourceStartPosition.isEqual(sourceEndPosition)
