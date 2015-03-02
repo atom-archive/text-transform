@@ -12,11 +12,11 @@ class Layer
     regions = []
 
     while sourceStartPosition.isLessThan(sourceEndPosition)
-      region = @transform.getNextRegion({sourceStartPosition, targetStartPosition})
-      break unless region.sourceTraversal.isGreaterThan(Point.ZERO) or region.targetTraversal.isGreaterThan(Point.ZERO)
-      sourceStartPosition = sourceStartPosition.traverse(region.sourceTraversal)
-      targetStartPosition = targetStartPosition.traverse(region.targetTraversal)
-      regions.push(region)
+      for region in @transform.getNextRegions({sourceStartPosition, targetStartPosition})
+        break unless region.sourceTraversal.isGreaterThan(Point.ZERO) or region.targetTraversal.isGreaterThan(Point.ZERO)
+        sourceStartPosition = sourceStartPosition.traverse(region.sourceTraversal)
+        targetStartPosition = targetStartPosition.traverse(region.targetTraversal)
+        regions.push(region)
 
     regions
 
