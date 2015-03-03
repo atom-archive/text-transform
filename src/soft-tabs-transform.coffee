@@ -5,7 +5,7 @@ _ = require 'underscore-plus'
 module.exports =
 class SoftTabsTransform
   constructor: (@tabLength) ->
-    @tab = _.multiplyString(" ", @tabLength)
+    @softTab = _.multiplyString(" ", @tabLength)
 
   initialize: (@source) ->
 
@@ -17,7 +17,7 @@ class SoftTabsTransform
       new Region(traversal, traversal)
 
   hasTabStopAt: (position) ->
-    tabStop = @source.positionOf(@tab, position)
+    tabStop = @source.positionOf(@softTab, position)
     tabStop?.isEqual(position)
 
   getContent: ({sourceStartPosition, sourceEndPosition, targetStartPosition, targetEndPosition}) ->
