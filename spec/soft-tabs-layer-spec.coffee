@@ -20,7 +20,7 @@ describe "soft tabs layer", ->
       expect(softTabsLayer.clipPosition(Point(0, 10), "backward")).toEqual Point(0, 10)
       expect(softTabsLayer.clipPosition(Point(0, 10), "forward")).toEqual Point(0, 10)
 
-    it "does not clip at tab stop", ->
+    it "does not clip at tab stops", ->
       expect(softTabsLayer.clipPosition(Point(0, 0))).toEqual Point(0, 0)
       expect(softTabsLayer.clipPosition(Point(0, 2))).toEqual Point(0, 2)
       expect(softTabsLayer.clipPosition(Point(0, 4))).toEqual Point(0, 4)
