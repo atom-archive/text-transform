@@ -24,10 +24,7 @@ describe "soft wraps layer", ->
       [[0, 22], [2, 3]]
     ]
 
-    for [linesPoint, softWrapsPoint, options] in mappings
-      unless options?
-        expect(softWrapsLayer.fromPositionInLayer(Point(linesPoint...), linesLayer)).toEqual Point(softWrapsPoint...)
-      expect(softWrapsLayer.toPositionInLayer(Point(softWrapsPoint...), linesLayer, options)).toEqual Point(linesPoint...)
+    expectMapping(mappings, softWrapsLayer, linesLayer)
 
     expect(softWrapsLayer.clipPosition(Point(1, 11), 'backward')).toEqual Point(1, 10)
     expect(softWrapsLayer.clipPosition(Point(1, 11), 'forward')).toEqual Point(2, 0)

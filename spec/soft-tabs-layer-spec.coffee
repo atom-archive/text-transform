@@ -36,11 +36,7 @@ describe "soft tabs layer", ->
       [[1, 4], [1, 5]]
     ]
 
-
-    for [linesPoint, tabsPoint, options] in mappings
-      unless options?
-        expect(softTabsLayer.fromPositionInLayer(Point(linesPoint...), linesLayer)).toEqual Point(tabsPoint...)
-      expect(softTabsLayer.toPositionInLayer(Point(tabsPoint...), linesLayer, options)).toEqual Point(linesPoint...)
+    expectMapping(mappings, softTabsLayer, linesLayer)
 
   describe "slicing", ->
     it "does not perform any text replacement", ->
@@ -83,7 +79,4 @@ describe "soft tabs layer", ->
         [[0, 10], [0, 10]]
       ]
 
-      for [linesPoint, tabsPoint, options] in mappings
-        unless options?
-          expect(softTabsLayer.fromPositionInLayer(Point(linesPoint...), linesLayer)).toEqual Point(tabsPoint...)
-        expect(softTabsLayer.toPositionInLayer(Point(tabsPoint...), linesLayer, options)).toEqual Point(linesPoint...)
+      expectMapping(mappings, softTabsLayer, linesLayer)
