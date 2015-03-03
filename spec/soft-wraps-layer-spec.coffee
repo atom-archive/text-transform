@@ -24,7 +24,7 @@ describe "soft wraps layer", ->
       [[0, 22], [2, 3]]
     ]
 
-    expectMapping(mappings, softWrapsLayer, linesLayer)
+    expectMappings(mappings, fromLayer: linesLayer, toLayer: softWrapsLayer)
 
     expect(softWrapsLayer.clipPosition(Point(1, 11), 'backward')).toEqual Point(1, 10)
     expect(softWrapsLayer.clipPosition(Point(1, 11), 'forward')).toEqual Point(2, 0)

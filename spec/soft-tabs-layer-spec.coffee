@@ -36,7 +36,7 @@ describe "soft tabs layer", ->
       [[1, 4], [1, 5]]
     ]
 
-    expectMapping(mappings, softTabsLayer, linesLayer)
+    expectMappings(mappings, fromLayer: linesLayer, toLayer: softTabsLayer)
 
   describe "slicing", ->
     it "does not perform any text replacement", ->
@@ -79,4 +79,4 @@ describe "soft tabs layer", ->
         [[0, 10], [0, 10]]
       ]
 
-      expectMapping(mappings, softTabsLayer, linesLayer)
+      expectMappings(mappings, fromLayer: linesLayer, toLayer: softTabsLayer)

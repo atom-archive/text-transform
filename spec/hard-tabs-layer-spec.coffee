@@ -25,7 +25,7 @@ describe "hard tabs layer", ->
       [[0, 9], [0, 11]]
     ]
 
-    expectMapping(mappings, tabsLayer, linesLayer)
+    expectMappings(mappings, fromLayer: linesLayer, toLayer: tabsLayer)
 
     expect(tabsLayer.clipPosition(Point(0, 0), 'forward')).toEqual Point(0, 0)
     expect(tabsLayer.clipPosition(Point(0, 1), 'backward')).toEqual Point(0, 0)
@@ -62,7 +62,7 @@ describe "hard tabs layer", ->
       [[2, 3], [2, 4]]
     ]
 
-    expectMapping(mappings, tabsLayer, linesLayer)
+    expectMappings(mappings, fromLayer: linesLayer, toLayer: tabsLayer)
 
     expect(tabsLayer.clipPosition(Point(1, 3), 'backward')).toEqual Point(1, 2)
     expect(tabsLayer.clipPosition(Point(1, 3), 'forward')).toEqual Point(1, 4)

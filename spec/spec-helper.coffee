@@ -5,8 +5,8 @@ exports.expectValues = (actual, expected) ->
   for expectedKey, expectedValue of expected
     expect(actual[expectedKey]).toEqual expectedValue
 
-exports.expectMapping = (mappings, layer, upperLayer) ->
+exports.expectMappings = (mappings, {fromLayer, toLayer}) ->
   for [linesPoint, tabsPoint, options] in mappings
     unless options?
-      expect(layer.fromPositionInLayer(Point(linesPoint...), upperLayer)).toEqual Point(tabsPoint...)
-    expect(layer.toPositionInLayer(Point(tabsPoint...), upperLayer, options)).toEqual Point(linesPoint...)
+      expect(toLayer.fromPositionInLayer(Point(linesPoint...), fromLayer)).toEqual Point(tabsPoint...)
+    expect(toLayer.toPositionInLayer(Point(tabsPoint...), fromLayer, options)).toEqual Point(linesPoint...)

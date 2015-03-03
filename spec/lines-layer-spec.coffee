@@ -28,7 +28,7 @@ describe "lines layer", ->
       [[0, 11], [2, 2]]
     ]
 
-    expectMapping(mappings, linesLayer, charactersLayer)
+    expectMappings(mappings, fromLayer: charactersLayer, toLayer: linesLayer)
 
     expect(linesLayer.clipPosition(Point(-1, -1))).toEqual Point(0, 0)
     expect(linesLayer.clipPosition(Point(-1, 2))).toEqual Point(0, 2)
