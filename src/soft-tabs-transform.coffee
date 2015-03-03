@@ -1,11 +1,12 @@
+require('es6-shim')
+
 Point = require './point'
 Region = require './region'
-_ = require 'underscore-plus'
 
 module.exports =
 class SoftTabsTransform
   constructor: (@tabLength) ->
-    @softTab = _.multiplyString(" ", @tabLength)
+    @softTab = " ".repeat(@tabLength)
 
   initialize: (@source) ->
 
