@@ -18,9 +18,7 @@ class SoftTabsTransform
 
   hasTabStopAt: (position) ->
     tabStop = @source.positionOf(@tab, position)
-    return unless tabStop
-
-    tabStop.isEqual(position)
+    tabStop?.isEqual(position)
 
   getContent: ({sourceStartPosition, sourceEndPosition, targetStartPosition, targetEndPosition}) ->
     @source.slice(sourceStartPosition, sourceEndPosition)
