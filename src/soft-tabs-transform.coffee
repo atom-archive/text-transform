@@ -10,7 +10,7 @@ class SoftTabsTransform
 
   initialize: (@source) ->
 
-  getRegions: ({sourceStartPosition, sourceEndPosition}) ->
+  getRegions: ({sourceStartPosition}) ->
     sourceEndPosition = @source.getEndPosition()
     sourcePosition = sourceStartPosition
     regions = []

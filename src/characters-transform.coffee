@@ -7,9 +7,6 @@ class CharactersTransform
   initialize: (@source) ->
 
   getRegions: ({sourceStartPosition}) ->
-    [@getNextRegion({sourceStartPosition})]
-
-  getNextRegion: ({sourceStartPosition}) ->
     sourcePosition = sourceStartPosition
     maxSourcePosition = @source.getEndPosition()
 
@@ -19,14 +16,14 @@ class CharactersTransform
 
       if isPairedCharacter(charCode1, charCode2)
         if sourcePosition.isEqual(sourceStartPosition)
-          return new Region(Point(0, 2), Point(0, 1))
+          return [new Region(Point(0, 2), Point(0, 1))]
         else
           break
       else
         sourcePosition = sourcePosition.traverse(Point(0, 1))
 
     traversal = sourcePosition.traversalFrom(sourceStartPosition)
-    new Region(traversal, traversal)
+    [new Region(traversal, traversal)]
 
   getContent: ({sourceStartPosition, sourceEndPosition}) ->
     @source.slice(sourceStartPosition, sourceEndPosition)
