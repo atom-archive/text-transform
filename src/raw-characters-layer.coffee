@@ -2,6 +2,8 @@
 Point = require './point'
 Region = require './region'
 
+require("es6-shim")
+
 module.exports =
 class RawCharactersLayer
   constructor: (@content) ->
@@ -9,6 +11,11 @@ class RawCharactersLayer
 
   onDidChange: (fn) ->
     @emitter.on 'did-change', fn
+
+  startsWith: (string, start=Point(0, 0)) ->
+    @assertPointInRange(start)
+
+    @content.startsWith(string, start.columns)
 
   positionOf: (string, start=Point(0, 0)) ->
     @assertPointInRange(start)

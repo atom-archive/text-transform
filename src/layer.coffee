@@ -112,8 +112,10 @@ class Layer
     @fromPositionInLayer(@toPositionInLayer(position, @source, clip: direction), @source)
 
   startsWith: (string, start=Point(0, 0)) ->
-    position = @positionOf(string, start)
-    position?.isEqual(start)
+    @source.startsWith(
+      string,
+      @toPositionInLayer(start, @source)
+    )
 
   positionOf: (string, start=Point(0, 0)) ->
     if sourcePosition = @source.positionOf(string, @toPositionInLayer(start, @source))
