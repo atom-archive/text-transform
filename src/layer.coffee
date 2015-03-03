@@ -12,7 +12,7 @@ class Layer
     regions = []
 
     while sourceStartPosition.isLessThan(sourceEndPosition)
-      for region in @transform.getNextRegions({sourceStartPosition, targetStartPosition})
+      for region in @transform.getRegions({sourceStartPosition, targetStartPosition})
         break unless region.sourceTraversal.isGreaterThan(Point.ZERO) or region.targetTraversal.isGreaterThan(Point.ZERO)
         sourceStartPosition = sourceStartPosition.traverse(region.sourceTraversal)
         targetStartPosition = targetStartPosition.traverse(region.targetTraversal)

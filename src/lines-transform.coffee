@@ -5,7 +5,7 @@ module.exports =
 class LinesTransform
   initialize: (@source) ->
 
-  getNextRegions: ({sourceStartPosition}) ->
+  getRegions: ({sourceStartPosition}) ->
     [@getNextRegion({sourceStartPosition})]
 
   getNextRegion: ({sourceStartPosition}) ->

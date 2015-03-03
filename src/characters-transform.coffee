@@ -6,7 +6,7 @@ module.exports =
 class CharactersTransform
   initialize: (@source) ->
 
-  getNextRegions: ({sourceStartPosition}) ->
+  getRegions: ({sourceStartPosition}) ->
     [@getNextRegion({sourceStartPosition})]
 
   getNextRegion: ({sourceStartPosition}) ->

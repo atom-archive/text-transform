@@ -7,7 +7,7 @@ class SoftWrapsTransform
 
   initialize: (@source) ->
 
-  getNextRegions: ({sourceStartPosition}) ->
+  getRegions: ({sourceStartPosition}) ->
     [@getNextRegion({sourceStartPosition})]
 
   getNextRegion: ({sourceStartPosition}) ->

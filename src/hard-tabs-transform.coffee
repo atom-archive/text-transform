@@ -7,7 +7,7 @@ class HardTabsTransform
 
   initialize: (@source) ->
 
-  getNextRegions: ({sourceStartPosition, targetStartPosition}) ->
+  getRegions: ({sourceStartPosition, targetStartPosition}) ->
     [@getNextRegion({sourceStartPosition, targetStartPosition})]
 
   getNextRegion: ({sourceStartPosition, targetStartPosition}) ->
