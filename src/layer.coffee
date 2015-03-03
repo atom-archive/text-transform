@@ -111,6 +111,12 @@ class Layer
     position = Point(rows, columns)
     @fromPositionInLayer(@toPositionInLayer(position, @source, clip: direction), @source)
 
+  startsWith: (string, start=Point(0, 0)) ->
+    @source.startsWith(
+      string,
+      @toPositionInLayer(start, @source)
+    )
+
   positionOf: (string, start=Point(0, 0)) ->
     if sourcePosition = @source.positionOf(string, @toPositionInLayer(start, @source))
       @fromPositionInLayer(sourcePosition, @source)

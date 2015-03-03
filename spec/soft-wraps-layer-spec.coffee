@@ -1,6 +1,8 @@
 TextBuffer = require '../src/text-buffer'
 Point = require '../src/point'
 
+{expectMappings} = require './spec-helper'
+
 describe "soft wraps layer", ->
   it "soft-wraps lines based on line length, ::baseCharacterWidth, and ::contentFrameWidth", ->
     buffer = new TextBuffer(text: 'abc def ghi jklmno\tpqr')
@@ -24,10 +26,7 @@ describe "soft wraps layer", ->
       [[0, 22], [2, 3]]
     ]
 
-    for [linesPoint, softWrapsPoint, options] in mappings
-      unless options?
-        expect(softWrapsLayer.fromPositionInLayer(Point(linesPoint...), linesLayer)).toEqual Point(softWrapsPoint...)
-      expect(softWrapsLayer.toPositionInLayer(Point(softWrapsPoint...), linesLayer, options)).toEqual Point(linesPoint...)
+    expectMappings(mappings, fromLayer: linesLayer, toLayer: softWrapsLayer)
 
     expect(softWrapsLayer.clipPosition(Point(1, 11), 'backward')).toEqual Point(1, 10)
     expect(softWrapsLayer.clipPosition(Point(1, 11), 'forward')).toEqual Point(2, 0)

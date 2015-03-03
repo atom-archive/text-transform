@@ -10,6 +10,11 @@ class RawCharactersLayer
   onDidChange: (fn) ->
     @emitter.on 'did-change', fn
 
+  startsWith: (string, start=Point(0, 0)) ->
+    @assertPointInRange(start)
+
+    @content.startsWith(string, start.columns)
+
   positionOf: (string, start=Point(0, 0)) ->
     @assertPointInRange(start)
 

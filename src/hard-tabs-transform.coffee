@@ -2,7 +2,7 @@ Point = require './point'
 Region = require './region'
 
 module.exports =
-class TabsTransform
+class HardTabsTransform
   constructor: (@tabLength) ->
 
   initialize: (@source) ->
@@ -23,8 +23,6 @@ class TabsTransform
   getContent: ({sourceStartPosition, sourceEndPosition, targetStartPosition, targetEndPosition}) ->
     if @source.characterAt(sourceStartPosition) is '\t'
       length = targetEndPosition.columns - targetStartPosition.columns
-      content = ""
-      content += " " for i in [0...length] by 1
-      content
+      " ".repeat(length)
     else
       @source.slice(sourceStartPosition, sourceEndPosition)

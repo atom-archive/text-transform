@@ -1,11 +1,13 @@
 TextBuffer = require '../src/text-buffer'
 Point = require '../src/point'
 
-describe "tabs layer", ->
+{expectMappings} = require './spec-helper'
+
+describe "hard tabs layer", ->
   it "replaces hard tab characters with whitespace", ->
     buffer = new TextBuffer(text: "\tab\tcde\tf")
     linesLayer = buffer.getLinesLayer()
-    tabsLayer = buffer.buildTabsLayer(2)
+    tabsLayer = buffer.buildHardTabsLayer(2)
     expect(tabsLayer.slice(Point(0, 0), Point(1, 0))).toBe "  ab  cde f"
 
     mappings = [
@@ -25,10 +27,7 @@ describe "tabs layer", ->
       [[0, 9], [0, 11]]
     ]
 
-    for [linesPoint, tabsPoint, options] in mappings
-      unless options?
-        expect(tabsLayer.fromPositionInLayer(Point(linesPoint...), linesLayer)).toEqual Point(tabsPoint...)
-      expect(tabsLayer.toPositionInLayer(Point(tabsPoint...), linesLayer, options)).toEqual Point(linesPoint...)
+    expectMappings(mappings, fromLayer: linesLayer, toLayer: tabsLayer)
 
     expect(tabsLayer.clipPosition(Point(0, 0), 'forward')).toEqual Point(0, 0)
     expect(tabsLayer.clipPosition(Point(0, 1), 'backward')).toEqual Point(0, 0)
@@ -36,7 +35,7 @@ describe "tabs layer", ->
 
     buffer = new TextBuffer(text: "\tab\ncd\t\n\tfg")
     linesLayer = buffer.getLinesLayer()
-    tabsLayer = buffer.buildTabsLayer(2)
+    tabsLayer = buffer.buildHardTabsLayer(2)
 
     expect(tabsLayer.slice(Point(0, 0), Point(1, 0))).toBe "  ab "
     expect(tabsLayer.slice(Point(1, 0), Point(2, 0))).toBe "cd   "
@@ -65,10 +64,7 @@ describe "tabs layer", ->
       [[2, 3], [2, 4]]
     ]
 
-    for [linesPoint, tabsPoint, options] in mappings
-      unless options?
-        expect(tabsLayer.fromPositionInLayer(Point(linesPoint...), linesLayer)).toEqual Point(tabsPoint...)
-      expect(tabsLayer.toPositionInLayer(Point(tabsPoint...), linesLayer, options)).toEqual Point(linesPoint...)
+    expectMappings(mappings, fromLayer: linesLayer, toLayer: tabsLayer)
 
     expect(tabsLayer.clipPosition(Point(1, 3), 'backward')).toEqual Point(1, 2)
     expect(tabsLayer.clipPosition(Point(1, 3), 'forward')).toEqual Point(1, 4)

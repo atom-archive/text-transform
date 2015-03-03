@@ -21,6 +21,7 @@
     }
   ],
   "dependencies": {
+    "es6-shim": "^0.26.1",
     "event-kit": "^1.0.3"
   },
   "devDependencies": {

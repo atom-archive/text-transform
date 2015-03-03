@@ -1,7 +1,7 @@
 TextBuffer = require '../src/text-buffer'
 Point = require '../src/point'
 
-{expectValues} = require './spec-helper'
+{expectValues, expectMappings} = require './spec-helper'
 
 describe "lines layer", ->
   it "transforms the linear characters layer into a layer with regions for each line", ->
@@ -28,9 +28,7 @@ describe "lines layer", ->
       [[0, 11], [2, 2]]
     ]
 
-    for [charactersPoint, linesPoint] in mappings
-      expect(linesLayer.fromPositionInLayer(Point(charactersPoint...), charactersLayer)).toEqual Point(linesPoint...)
-      expect(linesLayer.toPositionInLayer(Point(linesPoint...), charactersLayer)).toEqual Point(charactersPoint...)
+    expectMappings(mappings, fromLayer: charactersLayer, toLayer: linesLayer)
 
     expect(linesLayer.clipPosition(Point(-1, -1))).toEqual Point(0, 0)
     expect(linesLayer.clipPosition(Point(-1, 2))).toEqual Point(0, 2)

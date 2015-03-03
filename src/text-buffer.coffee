@@ -2,7 +2,8 @@ Layer = require './layer'
 RawCharactersLayer = require './raw-characters-layer'
 CharactersTransform = require './characters-transform'
 LinesTransform = require './lines-transform'
-TabsTransform = require './tabs-transform'
+HardTabsTransform = require './hard-tabs-transform'
+SoftTabsTransform = require './soft-tabs-transform'
 SoftWrapsTransform = require './soft-wraps-transform'
 
 module.exports =
@@ -18,8 +19,11 @@ class TextBuffer
   getLinesLayer: ->
     @linesLayer ?= new Layer(@getCharactersLayer(), new LinesTransform)
 
-  buildTabsLayer: (tabLength) ->
-    new Layer(@getLinesLayer(), new TabsTransform(tabLength))
+  buildHardTabsLayer: (tabLength) ->
+    new Layer(@getLinesLayer(), new HardTabsTransform(tabLength))
+
+  buildSoftTabsLayer: (tabLength) ->
+    new Layer(@buildHardTabsLayer(tabLength), new SoftTabsTransform(tabLength))
 
   buildSoftWrapsLayer: (params) ->
-    new Layer(@buildTabsLayer(params.tabLength), new SoftWrapsTransform(params))
+    new Layer(@buildHardTabsLayer(params.tabLength), new SoftWrapsTransform(params))
