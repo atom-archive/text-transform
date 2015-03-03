@@ -17,11 +17,13 @@ class SoftTabsTransform
     while sourcePosition.isLessThan(sourceEndPosition)
       if @hasTabStopAt(sourcePosition)
         softTabTraversal = Point(0, @tabLength)
-        regions.push new Region(softTabTraversal, softTabTraversal, 'exclusive')
+        regions.push(
+          new Region(softTabTraversal, softTabTraversal, 'exclusive')
+        )
         sourcePosition = sourcePosition.traverse(softTabTraversal)
       else
         traversal = @source.getEndPosition().traversalFrom(sourcePosition)
-        regions.push new Region(traversal, traversal)
+        regions.push(new Region(traversal, traversal))
         break
 
     regions
