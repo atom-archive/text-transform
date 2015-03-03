@@ -23,9 +23,10 @@ class SoftTabsTransform
         )
         sourcePosition = sourcePosition.traverse(softTabTraversal)
       else
-        traversal = @source.getEndPosition().traversalFrom(sourcePosition)
-        regions.push(new Region(traversal, traversal))
-        break
+        nextLinePosition = sourcePosition.traverse(Point(1, 0))
+        nextLineTraversal = nextLinePosition.traversalFrom(sourcePosition)
+        regions.push(new Region(nextLineTraversal, nextLineTraversal))
+        sourcePosition = sourcePosition.traverse(nextLineTraversal)
 
     regions
 

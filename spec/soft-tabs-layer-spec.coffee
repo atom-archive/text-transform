@@ -10,6 +10,38 @@ describe "soft tabs layer", ->
     linesLayer = buffer.getLinesLayer()
     softTabsLayer = buffer.buildSoftTabsLayer(2)
 
+  it "interacts correctly with other layers", ->
+    text = "  \thello\n  \tworld\t ;)"
+    buffer = new TextBuffer(text: text)
+    linesLayer = buffer.getLinesLayer()
+    softTabsLayer = buffer.buildSoftTabsLayer(2)
+
+    expect(softTabsLayer.slice(Point(0, 0), Point(1, 0))).toBe("    hello ")
+    expect(softTabsLayer.slice(Point(1, 0), Point(2, 0))).toBe("    world  ;)")
+
+    mappings = [
+      [[0, 0], [0, 0]]
+      [[0, 0], [0, 1], clip: "backward"]
+      [[0, 2], [0, 1], clip: "forward"]
+      [[0, 2], [0, 2]]
+      [[0, 2], [0, 3], clip: "backward"]
+      [[0, 3], [0, 3], clip: "forward"]
+      [[0, 6], [0, 7]]
+      [[1, 0], [1, 0]]
+      [[1, 0], [1, 1], clip: "backward"]
+      [[1, 2], [1, 1], clip: "forward"]
+      [[1, 2], [1, 3], clip: "backward"]
+      [[1, 3], [1, 3], clip: "forward"]
+      [[1, 3], [1, 4]]
+      [[1, 4], [1, 5]]
+    ]
+
+
+    for [linesPoint, tabsPoint, options] in mappings
+      unless options?
+        expect(softTabsLayer.fromPositionInLayer(Point(linesPoint...), linesLayer)).toEqual Point(tabsPoint...)
+      expect(softTabsLayer.toPositionInLayer(Point(tabsPoint...), linesLayer, options)).toEqual Point(linesPoint...)
+
   describe "slicing", ->
     it "does not perform any text replacement", ->
       expect(softTabsLayer.slice(Point(0, 0), Point(1, 0))).toBe(text)

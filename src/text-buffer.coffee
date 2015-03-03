@@ -23,7 +23,7 @@ class TextBuffer
     new Layer(@getLinesLayer(), new HardTabsTransform(tabLength))
 
   buildSoftTabsLayer: (tabLength) ->
-    new Layer(@getLinesLayer(), new SoftTabsTransform(tabLength))
+    new Layer(@buildHardTabsLayer(tabLength), new SoftTabsTransform(tabLength))
 
   buildSoftWrapsLayer: (params) ->
     new Layer(@buildHardTabsLayer(params.tabLength), new SoftWrapsTransform(params))
