@@ -1,5 +1,3 @@
-require("es6-shim")
-
 Point = require './point'
 Region = require './region'
 

@@ -1,5 +1,6 @@
 require 'coffee-cache'
 Point = require '../src/point'
+require 'es6-shim'
 
 exports.expectValues = (actual, expected) ->
   for expectedKey, expectedValue of expected

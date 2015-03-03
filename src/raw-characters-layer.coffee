@@ -2,8 +2,6 @@
 Point = require './point'
 Region = require './region'
 
-require("es6-shim")
-
 module.exports =
 class RawCharactersLayer
   constructor: (@content) ->
