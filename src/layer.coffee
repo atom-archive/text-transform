@@ -12,11 +12,11 @@ class Layer
     regions = []
 
     while sourceStartPosition.isLessThan(sourceEndPosition)
-      for region in @transform.getRegions({sourceStartPosition, targetStartPosition})
-        break unless region.sourceTraversal.isGreaterThan(Point.ZERO) or region.targetTraversal.isGreaterThan(Point.ZERO)
-        sourceStartPosition = sourceStartPosition.traverse(region.sourceTraversal)
-        targetStartPosition = targetStartPosition.traverse(region.targetTraversal)
-        regions.push(region)
+      region = @transform.getNextRegion({sourceStartPosition, targetStartPosition})
+      break unless region.sourceTraversal.isGreaterThan(Point.ZERO) or region.targetTraversal.isGreaterThan(Point.ZERO)
+      sourceStartPosition = sourceStartPosition.traverse(region.sourceTraversal)
+      targetStartPosition = targetStartPosition.traverse(region.targetTraversal)
+      regions.push(region)
 
     regions
 
@@ -110,6 +110,10 @@ class Layer
     columns = Math.max(0, columns)
     position = Point(rows, columns)
     @fromPositionInLayer(@toPositionInLayer(position, @source, clip: direction), @source)
+
+  startsWith: (string, start=Point(0, 0)) ->
+    position = @positionOf(string, start)
+    position?.isEqual(start)
 
   positionOf: (string, start=Point(0, 0)) ->
     if sourcePosition = @source.positionOf(string, @toPositionInLayer(start, @source))
