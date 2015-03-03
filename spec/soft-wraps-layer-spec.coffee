@@ -1,6 +1,8 @@
 TextBuffer = require '../src/text-buffer'
 Point = require '../src/point'
 
+{expectMappings} = require './spec-helper'
+
 describe "soft wraps layer", ->
   it "soft-wraps lines based on line length, ::baseCharacterWidth, and ::contentFrameWidth", ->
     buffer = new TextBuffer(text: 'abc def ghi jklmno\tpqr')

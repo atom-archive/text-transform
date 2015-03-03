@@ -1,6 +1,8 @@
 TextBuffer = require "../src/text-buffer"
 Point = require "../src/point"
 
+{expectMappings} = require './spec-helper'
+
 describe "soft tabs layer", ->
   [text, softTabsLayer, linesLayer] = []
 

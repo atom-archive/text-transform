@@ -1,6 +1,8 @@
 TextBuffer = require '../src/text-buffer'
 Point = require '../src/point'
 
+{expectValues, expectMappings} = require './spec-helper'
+
 describe "lines layer", ->
   it "transforms the linear characters layer into a layer with regions for each line", ->
     buffer = new TextBuffer(text: "abc\ndefg\nhi")
