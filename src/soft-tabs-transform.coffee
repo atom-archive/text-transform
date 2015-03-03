@@ -10,7 +10,7 @@ class SoftTabsTransform
 
   initialize: (@source) ->
 
-  getRegions: ({sourceStartPosition, sourceEndPosition, targetStartPosition}) ->
+  getRegions: ({sourceStartPosition, sourceEndPosition}) ->
     sourceEndPosition = @source.getEndPosition()
     sourcePosition = sourceStartPosition
     regions = []
@@ -33,5 +33,5 @@ class SoftTabsTransform
     tabStop = @source.positionOf(@softTab, position)
     tabStop?.isEqual(position)
 
-  getContent: ({sourceStartPosition, sourceEndPosition, targetStartPosition, targetEndPosition}) ->
+  getContent: ({sourceStartPosition, sourceEndPosition}) ->
     @source.slice(sourceStartPosition, sourceEndPosition)
